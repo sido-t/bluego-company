@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueGo Company - Earn Money Online</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        .btn-accent {
+            background: var(--accent);
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .task-card {
+            background: var(--light);
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .dashboard {
+            display: none;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .referral-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BlueGo Company</h1>
+        <p>Earn Money Online with Simple Tasks</p>
+    </div>
+
+    <div class="container">
+        <!-- Registration Section -->
+        <div id="registration" class="card">
+            <h2>Start Earning Today</h2>
+            <p>Register with just <strong>250 KSH</strong> and get <strong>50 KSH</strong> instant bonus!</p>
+            
+            <div class="form-group">
+                <label>Send 250 KSH to:</label>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; font-weight: bold;">
+                    M-Pesa: <span id="mpesa-number">0711359682</span>
+                    <button onclick="copyMpesaNumber()" class="btn" style="margin-left: 1rem; padding: 0.5rem 1rem;">Copy</button>
+                </div>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="referral">Referral Code (Optional)</label>
+                    <input type="text" id="referral">
+                </div>
+                <button type="submit" class="btn">Complete Registration</button>
+                <p>By registering, you agree to our Terms and Conditions</p>
+            </form>
+        </div>
+
+        <!-- Dashboard (Hidden until login) -->
+        <div id="dashboard" class="dashboard">
+            <div class="balance-card">
+                <h3>Your Balance</h3>
+                <h1 id="user-balance">0 KSH</h1>
+                <button id="withdraw-btn" class="btn" disabled>Withdraw (Min: 500 KSH)</button>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab active" onclick="openTab('earn')">Earn Money</div>
+                <div class="tab" onclick="openTab('referrals')">Referrals</div>
+                <div class="tab" onclick="openTab('account')">Account</div>
+            </div>
+
+            <div id="earn" class="tab-content active">
+                <h3>Available Tasks</h3>
+                <div class="task-grid">
+                    <div class="task-card">
+                        <h4>📝 Surveys</h4>
+                        <p>Earn <strong>50 KSH</strong> per survey</p>
+                        <p>Daily limit: 5 surveys</p>
+                        <button class="btn" onclick="startTask('survey')">Start Survey</button>
+                    </div>
+                    <div class="task-card">
+                        <h4>📺 Watch Ads</h4>
+                        <p>Earn <strong>10 KSH</strong> per ad</p>
+                        <p>Daily limit: 10 ads</p>
+                        <button class="btn" onclick="startTask('ad')">Watch Ad</button>
+                    </div>
+                    <div class="task-card">
+                        <h4>⌨️ Data Entry</h4>
+                        <p>Earn <strong>20 KSH</strong> per task</p>
+                        <p>Daily limit: 20 tasks</p>
+                        <button class="btn" onclick="startTask('data')">Start Task</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="referrals" class="tab-content">
+                <h3>Refer & Earn</h3>
+                <p>Earn <strong>50 KSH</strong> for every friend who joins using your link!</p>
+                
+                <div class="referral-box">
+                    <h4>Your Referral Link:</h4>
+                    <div id="referral-link" style="background: white; padding: 0.8rem; border-radius: 5px; margin: 0.5rem 0; word-break: break-all;"></div>
+                    <button onclick="copyReferralLink()" class="btn">Copy Link</button>
+                </div>
+
+                <h4 style="margin-top: 1.5rem;">Your Referrals</h4>
+                <div id="referral-list" style="background: white; padding: 1rem; border-radius: 5px;">
+                    <p>No referrals yet</p>
+                </div>
+            </div>
+
+            <div id="account" class="tab-content">
+                <h3>Account Settings</h3>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="account-phone" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Change Password</label>
+                    <input type="password" id="new-password" placeholder="New password">
+                </div>
+                <button class="btn">Save Changes</button>
+                <button class="btn btn-accent" style="margin-left: 1rem;">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo functionality - in a real app, this would connect to a backend
+        let user = null;
+        let balance = 50; // Starting bonus
+        const tasksCompleted = {
+            survey: 0,
+            ad: 0,
+            data: 0
+        };
+        const referrals = [];
+
+        // Copy M-Pesa number
+        function copyMpesaNumber() {
+            navigator.clipboard.writeText("0711359682");
+            alert("M-Pesa number copied!");
+        }
+
+        // Register form
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            const name = document.getElementById('fullname').value;
+            const referralCode = document.getElementById('referral').value;
+            
+            // Simulate registration
+            user = {
+                name,
+                phone,
+                balance,
+                referralCode: generateReferralCode(),
+                joined: new Date().toLocaleDateString()
+            };
+            
+            // Show dashboard
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            
+            // Update UI
+            document.getElementById('user-balance').textContent = balance + ' KSH';
+            document.getElementById('account-phone').value = phone;
+            document.getElementById('referral-link').textContent = 
+                window.location.href.split('?')[0] + '?ref=' + user.referralCode;
+            
+            // Check if came from referral
+            if(getParameterByName('ref')) {
+                referrals.push({
+                    phone: 'Demo Referral',
+                    date: new Date().toLocaleDateString(),
+                    earned: true
+                });
+                balance += 50;
+                updateBalance();
+                updateReferralList();
+            }
+        });
+
+        // Task system
+        function startTask(type) {
+            let earnings = 0;
+            let limit = 0;
+            
+            switch(type) {
+                case 'survey':
+                    if(tasksCompleted.survey >= 5) {
+                        alert("You've reached your daily survey limit!");
+                        return;
+                    }
+                    earnings = 50;
+                    tasksCompleted.survey++;
+                    limit = 5;
+                    break;
+                case 'ad':
+                    if(tasksCompleted.ad >= 10) {
+                        alert("You've reached your daily ad limit!");
+                        return;
+                    }
+                    earnings = 10;
+                    tasksCompleted.ad++;
+                    limit = 10;
+                    break;
+                case 'data':
+                    if(tasksCompleted.data >= 20) {
+                        alert("You've reached your daily data entry limit!");
+                        return;
+                    }
+                    earnings = 20;
+                    tasksCompleted.data++;
+                    limit = 20;
+                    break;
+            }
+            
+            // Simulate task completion
+            setTimeout(() => {
+                balance += earnings;
+                updateBalance();
+                alert(`Task completed! You earned ${earnings} KSH`);
+            }, 2000);
+        }
+
+        // Withdraw function
+        document.getElementById('withdraw-btn').addEventListener('click', function() {
+            if(balance >= 500) {
+                alert(`Withdrawal request for ${balance} KSH submitted! Will be sent to your M-Pesa shortly.`);
+                balance = 0;
+                updateBalance();
+            } else {
+                alert("You need at least 500 KSH to withdraw");
+            }
+        });
+
+        // Tab system
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Helper functions
+        function updateBalance() {
+            document.getElementById('user-balance').textContent = balance + ' KSH';
+            document.getElementById('withdraw-btn').disabled = balance < 500;
+        }
+
+        function generateReferralCode() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function copyReferralLink() {
+            navigator.clipboard.writeText(document.getElementById('referral-link').textContent);
+            alert("Referral link copied!");
+        }
+
+        function updateReferralList() {
+            const list = document.getElementById('referral-list');
+            if(referrals.length === 0) {
+                list.innerHTML = '<p>No referrals yet</p>';
+            } else {
+                list.innerHTML = referrals.map(ref => `
+                    <div style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                        <strong>${ref.phone}</strong> - ${ref.date} 
+                        ${ref.earned ? '✅ 50 KSH earned' : 'Pending'}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function getParameterByName(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+    </script>
+</body>
+</html>
